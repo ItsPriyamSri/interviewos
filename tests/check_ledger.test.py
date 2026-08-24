@@ -204,6 +204,95 @@ class CheckLedgerTests(unittest.TestCase):
             proc = run_checker(d)
             self.assertEqual(proc.returncode, 0, proc.stderr)
 
+    def test_unhashable_id_does_not_crash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            write_workspace(
+                d,
+                [row(**{"id": []})],
+                brief="",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("E###", proc.stderr)
+
+    def test_unhashable_topic_does_not_crash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            write_workspace(
+                d,
+                [row(**{"topic": {}})],
+                brief="Claim [^E001].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("must be string", proc.stderr)
+
+    def test_non_inferred_partial_without_url_exits_1(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            write_workspace(
+                d,
+                [row(source_url="", verdict="partial", **{"class": "official"})],
+                brief="Claim [^E001].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("source_url", proc.stderr)
+
+    def test_short_id_format_exits_1(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            r = row()
+            r["id"] = "E1"
+            write_workspace(
+                d,
+                [r],
+                brief="Claim [^E1].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+
+    def test_short_citation_exits_1_even_if_row_exists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            r = row()
+            r["id"] = "E1"
+            write_workspace(
+                d,
+                [r],
+                brief="Claim [^E1].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+
+    def test_missing_fields_row_still_counts_as_known_id(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            r = row()
+            del r["notes"]
+            write_workspace(
+                d,
+                [r],
+                brief="Claim [^E001].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("missing field", proc.stderr)
+            self.assertNotIn("not in ledger", proc.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

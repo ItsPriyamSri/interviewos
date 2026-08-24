@@ -38,8 +38,18 @@ TOPICS = {"role", "loop", "tech", "dsa"}
 CLASSES = {"official", "first_party", "second_party", "anecdote", "inferred"}
 VERDICTS = {"supported", "partial", "unsupported", "contradicted"}
 
-CITATION_RE = re.compile(r"\[\^E\d+\]")
+ID_RE = re.compile(r"^E\d{3}$")
+CITATION_RE = re.compile(r"\[\^E\d{3}\]")
 MARKDOWN_FILES = ("brief.md", "gaps.md", "plan.md")
+
+STRING_FIELDS = (
+    "id",
+    "topic",
+    "source_url",
+    "retrieved_at",
+    "class",
+    "verdict",
+)
 
 
 def check_iso8601(value: str) -> bool:
@@ -71,20 +81,35 @@ def check_ledger(path: Path) -> tuple[list[str], set]:
             problems.append(f"{path.name}:{lineno}: not a JSON object")
             continue
 
-        missing = [f for f in REQUIRED_FIELDS if f not in row]
-        if missing:
+        rid = row.get("id")
+        if not isinstance(rid, str) or not ID_RE.match(rid):
             problems.append(
-                f"{path.name}:{lineno}: missing field(s) {', '.join(missing)}"
+                f"{path.name}:{lineno}: id must be a string in E### form"
             )
             continue
+        where = f"{path.name}:{lineno} [{rid}]"
 
-        rid = row["id"]
         if rid in seen_ids:
             problems.append(f"{path.name}:{lineno}: duplicate id {rid}")
         seen_ids.add(rid)
         known_ids.add(rid)
 
-        where = f"{path.name}:{lineno} [{rid}]"
+        missing = [f for f in REQUIRED_FIELDS if f not in row]
+        if missing:
+            problems.append(
+                f"{where}: missing field(s) {', '.join(missing)}"
+            )
+            continue
+
+        not_str = [
+            f for f in STRING_FIELDS if not isinstance(row[f], str)
+        ]
+        if not_str:
+            problems.append(
+                f"{where}: field(s) must be string: "
+                f"{', '.join(not_str)}"
+            )
+            continue
 
         if row["topic"] not in TOPICS:
             problems.append(f"{where}: bad topic {row['topic']!r}")
@@ -104,9 +129,9 @@ def check_ledger(path: Path) -> tuple[list[str], set]:
             if row["verdict"] == "supported":
                 problems.append(f"{where}: supported requires a source, not inference")
         else:
-            if row["verdict"] == "supported" and not url.startswith(("http://", "https://")):
+            if not url.startswith(("http://", "https://")):
                 problems.append(
-                    f"{where}: verdict supported needs http(s) source_url"
+                    f"{where}: non-inferred rows need http(s) source_url"
                 )
 
     return problems, known_ids
@@ -140,10 +165,6 @@ def main(argv: list[str]) -> int:
         return 1
 
     problems, known_ids = check_ledger(workspace / "evidence.jsonl")
-    if not any("duplicate id" in p for p in problems):
-        # Citations against a ledger that failed to parse are noise;
-        # still check them so broken citations surface even on partial ledgers.
-        pass
     problems += check_markdown(workspace, known_ids)
 
     for problem in problems:
