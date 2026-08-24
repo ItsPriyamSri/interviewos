@@ -145,17 +145,39 @@ test("publish replaces stale files from a previous snapshot", async () => {
     await publishWorkspace({
       slug: "acme-sre",
       confirm: true,
-      files: [...validFiles(), { path: "extra.md", content: "old" }],
-      outDir,
-    });
-    const result = await publishWorkspace({
-      slug: "acme-sre",
-      confirm: true,
       files: validFiles(),
       outDir,
     });
-    assert.equal(result.files.includes("extra.md"), false);
-    await assert.rejects(() => readFile(join(outDir, "acme-sre", "extra.md"), "utf8"));
+    // Re-publish with changed content must fully replace those files.
+    const files = validFiles();
+    files[2] = { path: "gaps.md", content: "updated gap analysis" };
+    await publishWorkspace({ slug: "acme-sre", confirm: true, files, outDir });
+    const gaps = await readFile(join(outDir, "acme-sre", "gaps.md"), "utf8");
+    assert.equal(gaps, "updated gap analysis");
+  } finally {
+    await rm(outDir, { recursive: true, force: true });
+  }
+});
+
+test("publish rejects files outside the four-artifact contract", async () => {
+  const outDir = await mkdtemp(join(tmpdir(), "pub-"));
+  try {
+    const extra = [...validFiles(), { path: "extra.md", content: "old" }];
+    assert.throws(
+      () => publishWorkspace({ slug: "acme-sre", confirm: true, files: extra, outDir }),
+      /unexpected file path|exactly/i,
+    );
+    const nested = validFiles();
+    nested[1] = { path: "nested/brief.md", content: "x" };
+    assert.throws(
+      () => publishWorkspace({ slug: "acme-sre", confirm: true, files: nested, outDir }),
+      /unexpected file path|exactly/i,
+    );
+    const subset = validFiles().slice(0, 3);
+    assert.throws(
+      () => publishWorkspace({ slug: "acme-sre", confirm: true, files: subset, outDir }),
+      /incomplete/i,
+    );
   } finally {
     await rm(outDir, { recursive: true, force: true });
   }
@@ -165,7 +187,7 @@ test("publish rejects binary-looking content", async () => {
   const outDir = await mkdtemp(join(tmpdir(), "pub-"));
   try {
     const files = validFiles();
-    files.push({ path: "blob.bin", content: "ok\u0000\u0007bad" });
+    files[1] = { path: "brief.md", content: "ok\u0000\u0007bad" };
     assert.throws(
       () => publishWorkspace({ slug: "bin", confirm: true, files, outDir }),
       /binary/i,
