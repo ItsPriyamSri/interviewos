@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.pem
+.trueforge/
+dist/
+__pycache__/
+.venv/
+venv/
+*.pyc
+mcp/.published/
+fixtures/local/
+.DS_Store
+coverage/
+*.log
