@@ -1,23 +1,28 @@
-import { fileURLToPath } from "node:url";
+import dns from "node:dns/promises";
 
 const BLOCKED_HOSTNAMES = new Set(["localhost"]);
 const MAX_REDIRECTS = 5;
+const FETCH_TIMEOUT_MS = 15000;
 
-function isBlockedHost(hostname) {
-  const host = String(hostname).toLowerCase().replace(/^\[|\]$/g, "");
-  if (BLOCKED_HOSTNAMES.has(host)) return true;
-  // IPv6 loopback, link-local, and v4-mapped forms
-  if (host === "::1" || host === "::" || host.startsWith("fe80:") || host.startsWith("fc") || host.startsWith("fd")) {
-    return true;
-  }
-  const v4 = host.match(/^((?:\d{1,3}\.){3})\d{1,3}$/) ?? (host.startsWith("::ffff:") ? host.slice(7).match(/^((?:\d{1,3}\.){3})\d{1,3}$/) : null);
-  if (v4) {
-    const a = Number(v4[1].split(".")[0]);
-    const b = Number(v4[1].split(".")[1] ?? "-1");
+function isBlockedIp(ip) {
+  const bare = ip.toLowerCase().replace(/^\[|\]$/g, "").split("%")[0];
+  if (bare === "::1" || bare === "::") return true;
+  if (bare.startsWith("fe80:") || bare.startsWith("fc") || bare.startsWith("fd")) return true;
+  const v4text = /^(\d{1,3}\.){3}\d{1,3}$/.test(bare) ? bare : bare.startsWith("::ffff:") ? bare.slice(7) : null;
+  if (v4text && /^(\d{1,3}\.){3}\d{1,3}$/.test(v4text)) {
+    const [a, b] = v4text.split(".").map(Number);
     if (a === 127 || a === 10 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168)) {
       return true;
     }
   }
+  return false;
+}
+
+function isBlockedHostname(hostname) {
+  if (BLOCKED_HOSTNAMES.has(hostname.toLowerCase())) return true;
+  // Literal IPs (v4, v4-mapped v6, plain v6) are checked directly.
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) return isBlockedIp(hostname);
+  if (hostname.includes(":")) return isBlockedIp(hostname);
   return false;
 }
 
@@ -31,10 +36,28 @@ export function assertSafeUrl(rawUrl) {
   if (!["http:", "https:"].includes(parsed.protocol)) {
     throw new Error(`blocked scheme ${parsed.protocol}`);
   }
-  if (isBlockedHost(parsed.hostname)) {
+  if (isBlockedHostname(parsed.hostname)) {
     throw new Error(`blocked private/loopback host: ${parsed.hostname}`);
   }
   return parsed;
+}
+
+async function assertPublicTarget(target, lookupImpl = (h) => dns.lookup(h, { all: true })) {
+  const { hostname } = target;
+  if (isBlockedHostname(hostname)) {
+    throw new Error(`blocked private/loopback host: ${hostname}`);
+  }
+  let records;
+  try {
+    records = await lookupImpl(hostname);
+  } catch {
+    throw new Error(`could not resolve host: ${hostname}`);
+  }
+  for (const record of records ?? []) {
+    if (isBlockedIp(record.address)) {
+      throw new Error(`host ${hostname} resolves to private/loopback address ${record.address}`);
+    }
+  }
 }
 
 function stripTags(html) {
@@ -60,11 +83,19 @@ function extractTitle(html) {
   return "";
 }
 
-function guessCompany(text) {
+function companyFromTitle(title) {
+  if (!title) return "";
+  const parts = title
+    .split(/\s*(?:[-–—@|]|\bat\b|\bfor\b)\s*/i)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  return parts.length > 1 ? parts[parts.length - 1] : "";
+}
+
+function guessCompany(text, title = "") {
   const explicit = text.match(/^\s*Company:\s*(.+)$/im);
   if (explicit?.[1]) return explicit[1].trim();
-  const at = extractTitle(text)?.match(/^(.*?)\s+[-–—@]\s+/) ?? null;
-  return "";
+  return companyFromTitle(title);
 }
 
 function guessTitle(text) {
@@ -72,12 +103,13 @@ function guessTitle(text) {
   return lines[0] ?? "";
 }
 
-export async function ingestJd({ url, text, fetchImpl } = {}) {
+export async function ingestJd({ url, text, fetchImpl, lookupImpl } = {}) {
   if (text && String(text).trim()) {
     const clean = String(text);
+    const title = guessTitle(clean);
     return {
-      title: guessTitle(clean),
-      company_guess: guessCompany(clean),
+      title,
+      company_guess: guessCompany(clean, title),
       text: clean,
       source: "pasted",
     };
@@ -87,11 +119,13 @@ export async function ingestJd({ url, text, fetchImpl } = {}) {
   }
 
   const doFetch = fetchImpl ?? globalThis.fetch;
+  const doLookup = lookupImpl ?? ((h) => dns.lookup(h, { all: true }));
   let target = assertSafeUrl(url);
 
   let response;
   for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
-    response = await doFetch(target.toString());
+    await assertPublicTarget(target, doLookup);
+    response = await doFetch(target.toString(), { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
     if (response.status >= 300 && response.status < 400 && response.headers?.get?.("location")) {
       target = assertSafeUrl(new URL(response.headers.get("location"), target).toString());
       continue;
@@ -105,24 +139,14 @@ export async function ingestJd({ url, text, fetchImpl } = {}) {
   const html = await response.text();
   const body = stripTags(html);
   const sourceUrl = response.url ? String(response.url) : target.toString();
+  const title = extractTitle(html) || guessTitle(body);
 
   return {
-    title: extractTitle(html) || guessTitle(body),
-    company_guess: guessCompany(html),
+    title,
+    company_guess: guessCompany(html, title),
     text: body,
     source: sourceUrl,
   };
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
-  // CLI debug helper: node mcp/ingest.mjs '<json>'
-  const input = JSON.parse(process.argv[2] ?? "{}");
-  ingestJd(input)
-    .then((out) => console.log(JSON.stringify(out, null, 2)))
-    .catch((err) => {
-      console.error(err.message);
-      process.exit(1);
-    });
-}
-
-export const _internal = { isBlockedHost, stripTags };
+export const _internal = { isBlockedIp, isBlockedHostname, stripTags };

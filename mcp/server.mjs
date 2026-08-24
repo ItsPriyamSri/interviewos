@@ -58,21 +58,59 @@ function buildServer() {
   return server;
 }
 
-const httpServer = createServer(async (req, res) => {
-  const pathname = new URL(req.url ?? "/", `http://${req.headers.host}`).pathname;
-  if (req.method === "POST" && pathname === "/mcp") {
-    let body = "";
-    for await (const chunk of req) body += chunk;
+const MAX_BODY_BYTES = 2 * 1024 * 1024; // 2 MiB request cap (publish payload itself caps at 1 MiB)
 
+function readBody(req) {
+  return new Promise((resolveBody, rejectBody) => {
+    let size = 0;
+    let tooLarge = false;
+    const chunks = [];
+    req.on("data", (chunk) => {
+      size += chunk.length;
+      if (size > MAX_BODY_BYTES) {
+        // Drain the rest so the client can finish writing, then answer 413.
+        tooLarge = true;
+        chunks.length = 0;
+        return;
+      }
+      if (!tooLarge) chunks.push(chunk);
+    });
+    req.on("end", () =>
+      tooLarge
+        ? rejectBody(Object.assign(new Error("request body too large"), { statusCode: 413 }))
+        : resolveBody(Buffer.concat(chunks).toString("utf8")),
+    );
+    req.on("error", rejectBody);
+  });
+}
+
+const httpServer = createServer(async (req, res) => {
+  const pathname = (req.url ?? "/").split("?")[0];
+
+  if (req.method === "POST" && pathname === "/mcp") {
     // Stateless mode: each request is self-contained; TrueForge just needs a URL.
+    let body;
+    try {
+      body = await readBody(req);
+    } catch (err) {
+      res.writeHead(err.statusCode ?? 400, { "Content-Type": "application/json", Connection: "close" });
+      res.end(JSON.stringify({ jsonrpc: "2.0", error: { code: -32700, message: err.message }, id: null }));
+      return;
+    }
+
     const server = buildServer();
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
     });
-    res.on("close", () => {
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
       transport.close();
       server.close();
-    });
+    };
+    res.on("finish", cleanup);
+    res.on("close", cleanup);
     await server.connect(transport);
 
     try {
@@ -81,7 +119,10 @@ const httpServer = createServer(async (req, res) => {
       if (!res.headersSent) {
         res.writeHead(400, { "Content-Type": "application/json" });
       }
-      res.end(JSON.stringify({ jsonrpc: "2.0", error: { code: -32700, message: `bad request: ${err.message}` }, id: null }));
+      if (!res.writableEnded) {
+        res.end(JSON.stringify({ jsonrpc: "2.0", error: { code: -32700, message: `bad request: ${err.message}` }, id: null }));
+      }
+      cleanup();
     }
     return;
   }

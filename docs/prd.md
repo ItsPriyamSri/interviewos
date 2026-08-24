@@ -141,7 +141,7 @@ Root `instructions` stay short (role, never invent a stage, never publish withou
 
 Resume: prefer sandbox parse of text/PDF. If a resume tool is added, it is read-only.
 
-`publish_workspace` arguments: `{ "slug": string, "confirm": true }`. It fails if `scripts/check_ledger.py` would fail on the draft (broken citations).
+`publish_workspace` arguments: `{ "slug": string, "confirm": true, "files": [{ "path": string, "content": string }] }` — the agent reads the drafted sandbox files and passes their contents; the tool runs `scripts/check_ledger.py` on a temp dir materialized from `files` and fails if it would fail. Payload caps at 1 MiB; binary content rejected.
 
 ## Evidence strategy (no vector database)
 

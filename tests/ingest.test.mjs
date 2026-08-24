@@ -56,6 +56,7 @@ test("ingestJd fetches URL and strips tags", async () => {
   const out = await ingestJd({
     url: "https://jobs.example.com/sre",
     fetchImpl: fakeFetch(html),
+    lookupImpl: async () => [{ address: "93.184.216.34", family: 4 }],
   });
   assert.equal(out.source, "https://jobs.example.com/sre");
   assert.equal(out.title, "SRE at Globex");
@@ -77,8 +78,40 @@ test("ingestJd follows redirects but re-checks SSRF on each hop", async () => {
       ingestJd({
         url: "https://ok.example.com/a",
         fetchImpl: impl,
+        lookupImpl: async () => [{ address: "93.184.216.34", family: 4 }],
       }),
     /blocked|private|loopback/i,
   );
   assert.equal(calls, 1);
+});
+
+test("ingestJd blocks public hostname resolving to loopback", async () => {
+  await assert.rejects(
+    () =>
+      ingestJd({
+        url: "https://evil.example.com/jd",
+        fetchImpl: async () => ({ ok: true, status: 200, url: "https://evil.example.com/jd", text: async () => "" }),
+        lookupImpl: async () => [{ address: "127.0.0.1", family: 4 }],
+      }),
+    /resolves to private|loopback/i,
+  );
+});
+
+test("ingestJd allows public hostname resolving to public IP", async () => {
+  const out = await ingestJd({
+    url: "https://jobs.example.com/sre",
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      url: "https://jobs.example.com/sre",
+      text: async () => "<html><head><title>SRE — Globex</title></head><body><p>Do reliability.</p></body></html>",
+    }),
+    lookupImpl: async () => [{ address: "93.184.216.34", family: 4 }],
+  });
+  assert.equal(out.company_guess, "Globex");
+});
+
+test("company_guess from title when no Company: line", async () => {
+  const out = await ingestJd({ text: "Senior SRE at Globex\n\nShip things." });
+  assert.equal(out.company_guess, "Globex");
 });

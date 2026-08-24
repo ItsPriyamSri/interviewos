@@ -25,11 +25,15 @@ function validateFiles(files) {
   }
   let totalBytes = 0;
   const seen = new Set();
+  const safeEntries = [];
   for (const file of files) {
     if (!file || typeof file.path !== "string" || typeof file.content !== "string") {
       throw new Error("each file needs string path and content");
     }
     const rel = file.path.replaceAll("\\", "/");
+    if (/^[a-z]:/i.test(rel)) {
+      throw new Error(`unsafe file path: ${file.path}`);
+    }
     const segments = rel.split("/").filter((s) => s.length > 0);
     if (
       segments.length === 0 ||
@@ -49,7 +53,9 @@ function validateFiles(files) {
     if (totalBytes > MAX_TOTAL_BYTES) {
       throw new Error("payload too large: cap is 1 MiB total");
     }
+    safeEntries.push({ segments, content: file.content });
   }
+  return safeEntries;
 }
 
 function runChecker(dir) {
@@ -70,25 +76,25 @@ export function publishWorkspace({ slug, confirm, files, outDir = DEFAULT_OUT_DI
     throw new Error("publish requires confirm: true");
   }
   checkSlug(slug);
-  validateFiles(files);
+  const safeEntries = validateFiles(files);
 
   return (async () => {
     const staging = await mkdtemp(join(tmpdir(), "interviewos-publish-"));
     try {
-      for (const file of files) {
-        const dest = join(staging, file.path);
+      for (const { segments, content } of safeEntries) {
+        const dest = join(staging, ...segments);
         await mkdir(dirname(dest), { recursive: true });
-        await writeFile(dest, file.content, "utf8");
+        await writeFile(dest, content, "utf8");
       }
 
       runChecker(staging);
 
       const finalDir = join(outDir, slug);
       await mkdir(finalDir, { recursive: true });
-      for (const file of files) {
-        const dest = join(finalDir, file.path);
+      for (const { segments, content } of safeEntries) {
+        const dest = join(finalDir, ...segments);
         await mkdir(dirname(dest), { recursive: true });
-        await writeFile(dest, file.content, "utf8");
+        await writeFile(dest, content, "utf8");
       }
 
       const names = files.map((f) => f.path).sort();
