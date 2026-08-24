@@ -40,16 +40,8 @@ VERDICTS = {"supported", "partial", "unsupported", "contradicted"}
 
 ID_RE = re.compile(r"^E\d{3}$")
 CITATION_RE = re.compile(r"\[\^E\d{3}\]")
+CITATION_LOOSE_RE = re.compile(r"\[\^E\d*\]")
 MARKDOWN_FILES = ("brief.md", "gaps.md", "plan.md")
-
-STRING_FIELDS = (
-    "id",
-    "topic",
-    "source_url",
-    "retrieved_at",
-    "class",
-    "verdict",
-)
 
 
 def check_iso8601(value: str) -> bool:
@@ -102,7 +94,7 @@ def check_ledger(path: Path) -> tuple[list[str], set]:
             continue
 
         not_str = [
-            f for f in STRING_FIELDS if not isinstance(row[f], str)
+            f for f in REQUIRED_FIELDS if not isinstance(row[f], str)
         ]
         if not_str:
             problems.append(
@@ -145,8 +137,14 @@ def check_markdown(workspace: Path, known_ids: set) -> list[str]:
             continue
         text = path.read_text(encoding="utf-8")
         for lineno, line in enumerate(text.splitlines(), start=1):
-            for cite in CITATION_RE.findall(line):
+            for cite in CITATION_LOOSE_RE.findall(line):
                 cid = cite[2:-1]  # strip [^ and ]
+                if not CITATION_RE.fullmatch(cite):
+                    problems.append(
+                        f"{name}:{lineno}: malformed citation {cite} "
+                        f"(must be [^E###] with 3 digits)"
+                    )
+                    continue
                 if cid not in known_ids:
                     problems.append(
                         f"{name}:{lineno}: citation {cid} not in ledger"

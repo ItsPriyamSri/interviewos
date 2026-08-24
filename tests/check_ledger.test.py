@@ -276,6 +276,36 @@ class CheckLedgerTests(unittest.TestCase):
             proc = run_checker(d)
             self.assertEqual(proc.returncode, 1)
 
+    def test_malformed_citation_exits_1(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            write_workspace(
+                d,
+                [row()],
+                brief="Claim exists as [^E001] but this is [^E01].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("malformed citation", proc.stderr)
+
+    def test_non_string_claim_exits_1(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            r = row()
+            r["claim"] = {"text": "nonsense"}
+            write_workspace(
+                d,
+                [r],
+                brief="Claim [^E001].\n",
+                gaps="",
+                plan="",
+            )
+            proc = run_checker(d)
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("must be string", proc.stderr)
+
     def test_missing_fields_row_still_counts_as_known_id(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = Path(tmp)
