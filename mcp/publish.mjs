@@ -9,6 +9,7 @@ const CHECKER = join(REPO_ROOT, "scripts", "check_ledger.py");
 const DEFAULT_OUT_DIR = join(REPO_ROOT, "mcp", ".published");
 
 const MAX_TOTAL_BYTES = 1024 * 1024; // 1 MiB payload cap
+const ALLOWED_PATHS = new Set(["evidence.jsonl", "brief.md", "gaps.md", "plan.md"]);
 const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 // Control characters that indicate binary content (tab/newline/CR allowed)
 const BINARY_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/;
@@ -31,16 +32,10 @@ function validateFiles(files) {
       throw new Error("each file needs string path and content");
     }
     const rel = file.path.replaceAll("\\", "/");
-    if (/^[a-z]:/i.test(rel)) {
-      throw new Error(`unsafe file path: ${file.path}`);
-    }
-    const segments = rel.split("/").filter((s) => s.length > 0);
-    if (
-      segments.length === 0 ||
-      rel.startsWith("/") ||
-      segments.some((s) => s === "." || s === "..")
-    ) {
-      throw new Error(`unsafe file path: ${file.path}`);
+    if (!ALLOWED_PATHS.has(rel)) {
+      throw new Error(
+        `unexpected file path ${file.path}: a workspace is exactly ${[...ALLOWED_PATHS].join(", ")}`,
+      );
     }
     if (seen.has(rel)) {
       throw new Error(`duplicate file path: ${file.path}`);
@@ -53,7 +48,7 @@ function validateFiles(files) {
     if (totalBytes > MAX_TOTAL_BYTES) {
       throw new Error("payload too large: cap is 1 MiB total");
     }
-    safeEntries.push({ segments, content: file.content });
+    safeEntries.push({ segments: [rel], content: file.content });
   }
   return safeEntries;
 }

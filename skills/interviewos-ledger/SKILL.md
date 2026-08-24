@@ -27,7 +27,7 @@ description: JSONL evidence schema, source classes, citation and contradiction r
 ## Rules
 
 - IDs are `E###` (three digits), unique per workspace, stable for the session (`E001`, `E002`, …).
-- `verdict: supported` requires a real `source_url` the tools actually retrieved this session. Prior knowledge is `inferred`, never `supported`.
+- `verdict: supported` requires a non-empty `http(s)` `source_url` that you fetched with your tools during this investigation. Prior knowledge is `inferred`, never `supported`. (The checker enforces the URL; the retrieval itself is your procedural obligation — skeptics and the operator review it.)
 - Classes:
   - `official` — careers page, JD, company engineering blog, official interview guide
   - `first_party` — company employees in official or clearly affiliated channels

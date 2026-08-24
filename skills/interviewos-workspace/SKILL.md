@@ -7,15 +7,21 @@ description: Workspace file layout, gap rubric, P0/P1/P2 plan rules, and the exa
 
 ## File layout (only these four files)
 
+In the sandbox, draft under `interviewos/<slug>/`:
+
 ```
 interviewos/<slug>/
   evidence.jsonl    # source of truth (see interviewos-ledger)
   brief.md          # role + interview loop + tech/DSA, cited
-  gaps.md           # candidate vs ledger (omit or mark N/A without resume)
+  gaps.md           # candidate vs ledger (mark N/A without resume)
   plan.md           # P0/P1/P2 only from cited gaps
 ```
 
 `<slug>` is filesystem-safe `{company}-{role}`, lowercase with hyphens (e.g. `google-sre`).
+
+The publish payload's `files[].path` entries are the four workspace-relative
+filenames (`evidence.jsonl`, `brief.md`, `gaps.md`, `plan.md`) — not the
+sandbox path. The tool rejects any other path and writes to `<outDir>/<slug>/`.
 
 Do not emit extra markdown files. Four quality files beat eight thin ones.
 
