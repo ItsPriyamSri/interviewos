@@ -1,3 +1,8 @@
+# SYNTHETIC FIXTURE — not a real Google document
+# The role description below is realistic, but the interview-process section
+# is illustrative and unverified. Research it with tools; do not cite this
+# file as official Google evidence.
+
 Company: Google
 Role: Site Reliability Engineer (L4)
 
