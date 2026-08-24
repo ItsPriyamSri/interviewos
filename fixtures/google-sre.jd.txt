@@ -1,0 +1,44 @@
+Company: Google
+Role: Site Reliability Engineer (L4)
+
+About the role
+
+Site Reliability Engineers at Google keep large-scale production systems fast,
+reliable, and operable. SREs blend software engineering with systems
+engineering: they write automation to eliminate toil, design for reliability,
+and respond to incidents across Google's fleet.
+
+Responsibilities
+
+- Design, build, and maintain automation for deployment, monitoring, and incident response.
+- Own reliability targets (SLOs/SLIs/error budgets) for a service area.
+- Troubleshoot production issues across networking, storage, compute, and Kubernetes-based platforms.
+- Write code in Python, Go, or Java to improve observability and reduce manual operations.
+- Participate in an on-call rotation and lead blameless postmortems.
+
+Requirements
+
+- Experience running and operating large-scale distributed systems.
+- Programming experience in Python, Go, Java, or C++.
+- Working knowledge of Linux internals, networking (TCP/IP, DNS, load balancing), and containers/Kubernetes.
+- Experience with monitoring and alerting systems (e.g. Prometheus, Monarch-style metrics).
+- Bachelor's degree or equivalent practical experience.
+
+Interview process overview
+
+1. Recruiter screen (~30 min): background, motivation, logistics.
+2. Online assessment or coding screen (for some candidates): 1-2 algorithmic problems.
+3. Phone/virtual technical interview: data structures and algorithms.
+4. Onsite loop (typically 4-5 rounds):
+   - Coding round(s): algorithms and data structures in a chosen language.
+   - Systems design / Distributed systems round: design at scale, trade-offs.
+   - Non-abstract Large System Design (NALSD): capacity estimation, hardware sizing, failure analysis.
+   - Googleyness & leadership: collaboration, ambiguity handling, values.
+5. Team match: conversations with hiring teams after passing the loop.
+
+What is evaluated
+
+- Coding: correctness, complexity analysis, clean implementation.
+- Systems thinking: failure modes, capacity planning, SLOs, trade-off reasoning.
+- Troubleshooting: structured debugging under time pressure.
+- Communication: clear reasoning aloud; asking clarifying questions.
