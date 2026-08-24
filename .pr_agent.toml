@@ -1,0 +1,10 @@
+[github_app]
+pr_commands = [
+    "/agentic_describe",
+    "/agentic_review"
+]
+
+[review_agent]
+comments_location_policy = "both"
+inline_comments_severity_threshold = 3
+issues_user_guidelines = "Prefer correctness, security, and missing tests. Do not suggest vector databases, extra agent frameworks, or a custom chat UI. Flag committed secrets, personal data, and approval bypasses on write tools."
