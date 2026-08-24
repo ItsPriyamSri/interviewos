@@ -50,6 +50,10 @@ function validateFiles(files) {
     }
     safeEntries.push({ segments: [rel], content: file.content });
   }
+  const missing = [...ALLOWED_PATHS].filter((p) => !seen.has(p));
+  if (missing.length > 0) {
+    throw new Error(`workspace incomplete: missing ${missing.join(", ")}`);
+  }
   return safeEntries;
 }
 

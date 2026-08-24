@@ -173,6 +173,11 @@ test("publish rejects files outside the four-artifact contract", async () => {
       () => publishWorkspace({ slug: "acme-sre", confirm: true, files: nested, outDir }),
       /unexpected file path|exactly/i,
     );
+    const subset = validFiles().slice(0, 3);
+    assert.throws(
+      () => publishWorkspace({ slug: "acme-sre", confirm: true, files: subset, outDir }),
+      /incomplete/i,
+    );
   } finally {
     await rm(outDir, { recursive: true, force: true });
   }
