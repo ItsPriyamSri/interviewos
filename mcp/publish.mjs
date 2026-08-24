@@ -90,6 +90,8 @@ export function publishWorkspace({ slug, confirm, files, outDir = DEFAULT_OUT_DI
       runChecker(staging);
 
       const finalDir = join(outDir, slug);
+      // Replace any previous snapshot so a re-publish never leaves stale files.
+      await rm(finalDir, { recursive: true, force: true });
       await mkdir(finalDir, { recursive: true });
       for (const { segments, content } of safeEntries) {
         const dest = join(finalDir, ...segments);

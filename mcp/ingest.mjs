@@ -1,4 +1,6 @@
 import dns from "node:dns/promises";
+import http from "node:http";
+import https from "node:https";
 
 const BLOCKED_HOSTNAMES = new Set(["localhost"]);
 const MAX_REDIRECTS = 5;
@@ -58,6 +60,63 @@ async function assertPublicTarget(target, lookupImpl = (h) => dns.lookup(h, { al
       throw new Error(`host ${hostname} resolves to private/loopback address ${record.address}`);
     }
   }
+  if (!records || records.length === 0) {
+    throw new Error(`could not resolve host: ${hostname}`);
+  }
+  // Return the validated address so the fetch can pin it, closing the
+  // DNS-rebinding window between check and connection.
+  return records[0].address;
+}
+
+const MAX_RESPONSE_BYTES = 5 * 1024 * 1024;
+
+// Minimal fetch-like wrapper that connects to a pre-validated IP while
+// keeping SNI/Host on the original hostname.
+function fetchViaIp(target, address) {
+  return new Promise((resolvePromise, rejectPromise) => {
+    const secure = target.protocol === "https:";
+    const mod = secure ? https : http;
+    const request = mod.request(
+      {
+        host: address,
+        port: target.port || (secure ? 443 : 80),
+        path: `${target.pathname}${target.search}`,
+        method: "GET",
+        setHost: false,
+        headers: {
+          host: target.host,
+          accept: "*/*",
+          "user-agent": "InterviewOS/0.1 (+mcp ingest_jd)",
+        },
+        servername: secure ? target.hostname : undefined,
+        timeout: FETCH_TIMEOUT_MS,
+      },
+      (response) => {
+        const chunks = [];
+        let size = 0;
+        response.on("data", (chunk) => {
+          size += chunk.length;
+          if (size > MAX_RESPONSE_BYTES) {
+            request.destroy(new Error("response body too large"));
+            return;
+          }
+          chunks.push(chunk);
+        });
+        response.on("end", () => {
+          resolvePromise({
+            ok: response.statusCode >= 200 && response.statusCode < 300,
+            status: response.statusCode,
+            url: target.toString(),
+            headers: { get: (name) => response.headers[name.toLowerCase()] ?? null },
+            text: async () => Buffer.concat(chunks).toString("utf8"),
+          });
+        });
+      },
+    );
+    request.on("timeout", () => request.destroy(new Error("fetch timed out")));
+    request.on("error", rejectPromise);
+    request.end();
+  });
 }
 
 function stripTags(html) {
@@ -124,8 +183,13 @@ export async function ingestJd({ url, text, fetchImpl, lookupImpl } = {}) {
 
   let response;
   for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
-    await assertPublicTarget(target, doLookup);
-    response = await doFetch(target.toString(), { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+    const pinnedAddress = await assertPublicTarget(target, doLookup);
+    // Pin the validated IP for the real connection (no injected fetchImpl),
+    // so a DNS rebinding between check and connect cannot reach a private host.
+    response =
+      fetchImpl
+        ? await fetchImpl(target.toString(), { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
+        : await fetchViaIp(target, pinnedAddress);
     if (response.status >= 300 && response.status < 400 && response.headers?.get?.("location")) {
       target = assertSafeUrl(new URL(response.headers.get("location"), target).toString());
       continue;

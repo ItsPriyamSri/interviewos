@@ -60,27 +60,40 @@ function buildServer() {
 
 const MAX_BODY_BYTES = 2 * 1024 * 1024; // 2 MiB request cap (publish payload itself caps at 1 MiB)
 
+const DRAIN_WINDOW_MS = 5000; // bound how long an oversized upload may stay open
+
 function readBody(req) {
   return new Promise((resolveBody, rejectBody) => {
     let size = 0;
     let tooLarge = false;
+    let settled = false;
+    let drainTimer;
     const chunks = [];
+    const finish = (fn, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(drainTimer);
+      fn(value);
+    };
     req.on("data", (chunk) => {
       size += chunk.length;
-      if (size > MAX_BODY_BYTES) {
-        // Drain the rest so the client can finish writing, then answer 413.
-        tooLarge = true;
-        chunks.length = 0;
-        return;
-      }
-      if (!tooLarge) chunks.push(chunk);
+      if (tooLarge) return; // keep draining but discard
+      size > MAX_BODY_BYTES
+        ? ((tooLarge = true),
+          (chunks.length = 0),
+          // If the client stalls instead of finishing, cut the connection.
+          (drainTimer = setTimeout(() => {
+            req.destroy();
+            finish(rejectBody, Object.assign(new Error("request body too large"), { statusCode: 413 }));
+          }, DRAIN_WINDOW_MS)))
+        : chunks.push(chunk);
     });
     req.on("end", () =>
       tooLarge
-        ? rejectBody(Object.assign(new Error("request body too large"), { statusCode: 413 }))
-        : resolveBody(Buffer.concat(chunks).toString("utf8")),
+        ? finish(rejectBody, Object.assign(new Error("request body too large"), { statusCode: 413 }))
+        : finish(resolveBody, Buffer.concat(chunks).toString("utf8")),
     );
-    req.on("error", rejectBody);
+    req.on("error", (err) => finish(rejectBody, err));
   });
 }
 

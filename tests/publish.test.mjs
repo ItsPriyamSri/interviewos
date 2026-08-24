@@ -139,6 +139,28 @@ test("publish rejects oversized payloads", async () => {
   }
 });
 
+test("publish replaces stale files from a previous snapshot", async () => {
+  const outDir = await mkdtemp(join(tmpdir(), "pub-"));
+  try {
+    await publishWorkspace({
+      slug: "acme-sre",
+      confirm: true,
+      files: [...validFiles(), { path: "extra.md", content: "old" }],
+      outDir,
+    });
+    const result = await publishWorkspace({
+      slug: "acme-sre",
+      confirm: true,
+      files: validFiles(),
+      outDir,
+    });
+    assert.equal(result.files.includes("extra.md"), false);
+    await assert.rejects(() => readFile(join(outDir, "acme-sre", "extra.md"), "utf8"));
+  } finally {
+    await rm(outDir, { recursive: true, force: true });
+  }
+});
+
 test("publish rejects binary-looking content", async () => {
   const outDir = await mkdtemp(join(tmpdir(), "pub-"));
   try {
