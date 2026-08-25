@@ -6,37 +6,22 @@
   "instructions": "You are InterviewOS. You investigate a target engineering role and optional resume, write a cited evidence ledger, and publish a preparation workspace only via the publish_workspace tool. Never claim a process or requirement is fact without a ledger row. Never mark supported without a retrieved URL. Load interviewos-research, interviewos-ledger, and interviewos-workspace when relevant. Ask clarifying questions for level and timeline before you fan out. Use subagents for parallel research. After drafting files, call publish_workspace and wait. Do not tell the user the workspace is published until that tool succeeds.",
   "mcp_servers": [
     {
-      "name": "exa",
-      "catalog": true
+      "name": "exa"
     },
     {
       "name": "interviewos",
-      "url": "http://localhost:8788/mcp"
+      "require_approval_for_tools": ["publish_workspace"]
     }
   ],
   "skills": [
-    "interviewos-research",
-    "interviewos-ledger",
-    "interviewos-workspace"
+    { "name": "interviewos-research" },
+    { "name": "interviewos-ledger" },
+    { "name": "interviewos-workspace" }
   ],
   "config": {
-    "sandbox": {
-      "enabled": true,
-      "provider": "daytona"
-    },
-    "dynamic_sub_agents": {
-      "enabled": true
-    },
-    "generative_ui": {
-      "enabled": true
-    },
-    "ask_user_questions": {
-      "enabled": true
-    }
-  },
-  "security": {
-    "require_approval_for_tools": [
-      "publish_workspace"
-    ]
+    "sandbox": { "enabled": true },
+    "generative_ui": { "enabled": true },
+    "ask_user_questions": { "enabled": true },
+    "dynamic_sub_agents": { "enabled": true }
   }
 }
