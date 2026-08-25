@@ -30,9 +30,14 @@ test("agent spec declares required capabilities and skills", () => {
   assert.equal(config.sandbox?.enabled, true, "sandbox required for skills/code mode");
   assert.equal(config.dynamic_sub_agents?.enabled, true);
   assert.equal(config.ask_user_questions?.enabled, true);
-  const skills = (agentSpec.skills ?? []).map((s) => s.name ?? s);
+  const skills = agentSpec.skills ?? [];
+  assert.ok(
+    skills.every((s) => typeof s === "object" && typeof s.name === "string"),
+    "skills must be name-only objects, not strings",
+  );
+  const names = skills.map((s) => s.name);
   for (const expected of ["interviewos-research", "interviewos-ledger", "interviewos-workspace"]) {
-    assert.ok(skills.includes(expected), `missing skill ${expected}`);
+    assert.ok(names.includes(expected), `missing skill ${expected}`);
   }
 });
 
@@ -52,5 +57,13 @@ test("no second TrueForge agent spec exists in the repo", () => {
 
 test("server marks publish_workspace destructive so the harness default gates it too", () => {
   const serverSource = readFileSync(join(ROOT, "mcp", "server.mjs"), "utf8");
-  assert.match(serverSource, /destructiveHint:\s*true/, "publish tool must be annotated destructive");
+  const registration = serverSource.match(
+    /registerTool\(\s*"publish_workspace"[\s\S]*?\}\);/,
+  );
+  assert.ok(registration, "publish_workspace must be registered in mcp/server.mjs");
+  assert.match(
+    registration[0],
+    /destructiveHint:\s*true/,
+    "publish_workspace registration must carry destructiveHint: true",
+  );
 });
