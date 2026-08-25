@@ -221,7 +221,7 @@ Git: never push features to main. Qodo must review every PR. See implementation 
 
 **Interfaces:**
 - Skill `name` frontmatter must equal directory contract: `interviewos-research`, `interviewos-ledger`, `interviewos-workspace`.
-- `agent.json` keys per TrueForge agent spec (`snake_case`): `model.name` placeholder `REPLACE_WITH_YOUR_MODEL`; `instructions` short; `mcp_servers` Exa + `interviewos`; `skills` the three names; `config.sandbox.enabled: true`; `dynamic_sub_agents.enabled: true`; `generative_ui.enabled: true`; `ask_user_questions.enabled: true`; `interviewos.require_approval_for_tools` includes `publish_workspace` (and `@write` if supported).
+- `agent.json` keys per TrueForge agent spec (`snake_case`): `model.name` placeholder `REPLACE_WITH_YOUR_MODEL`; `instructions` short; `mcp_servers` Exa + `interviewos`, with approval config per server — `mcp_servers[].require_approval_for_tools: ["publish_workspace"]` on the `interviewos` entry (the harness default also gates `@write`/`@destructive` tools); `skills` as name-only objects (`[{ "name": "..." }]`); `config.sandbox.enabled: true`; `dynamic_sub_agents.enabled: true`; `generative_ui.enabled: true`; `ask_user_questions.enabled: true`. There is no top-level security block in the spec.
 
 Root instructions (use this text, tweak only if TrueForge token limits bite):
 
