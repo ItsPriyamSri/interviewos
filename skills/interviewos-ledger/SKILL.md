@@ -45,6 +45,21 @@ When subagents return candidate rows, merge in the sandbox:
 - Renumber ids sequentially if needed; keep a mapping so citations stay consistent.
 - A skeptic must never leave `verdict: supported` on a row whose URL was not fetched this session.
 
+## Skeptic pass
+
+After merging subagent rows, spawn **one skeptic subagent per top claim**
+(up to 8, ranked by how prominent the claim will be in the planned brief):
+
+- The skeptic re-derives each assigned claim from its cited URL alone.
+- A skeptic must never return `supported` without fetching a URL this session.
+- Downgrade outcomes: `verdict` becomes `partial`/`unsupported` when the quote
+  doesn't hold; `class: official` stays only if the page is genuinely
+  company-owned. If a claim is unverifiable, make the row fully inferred:
+  `class: inferred`, **empty** `source_url` and `quote`, verdict
+  `partial`/`unsupported`, and tag it `[INFERRED]` in markdown — an inferred
+  row keeps no URL and can never be `supported`.
+- Record the challenge result in `notes` (e.g. "skeptic: quote confirmed verbatim").
+
 ## Citation rules (markdown files)
 
 - Every factual sentence in `brief.md`, `gaps.md`, `plan.md` cites its row: `[^E00x]`.
