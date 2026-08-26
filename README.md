@@ -39,7 +39,7 @@ preparation workspace (`evidence.jsonl`, `brief.md`, `gaps.md`, `plan.md`) —
     annotated as a write/destructive tool, so TrueForge pauses for human approval.
 - **Evidence ledger** is the anti-hallucination system: every factual claim in
   the published markdown cites a ledger row; unsupported claims must be tagged
-  `[INFERRED]`. No vector database.
+  `[INFERRED]`. No vector database. Deeper dive: [docs/writeup.md](docs/writeup.md).
 
 ## Prerequisites
 
@@ -119,7 +119,8 @@ mcp/                        # custom MCP server (ingest_jd, publish_workspace)
 scripts/check_ledger.py     # evidence ledger validator (stdlib Python)
 tests/                      # Python + Node test suites
 fixtures/                   # synthetic golden-path inputs
-docs/                       # PRD, implementation plan, testing plan
+docs/                       # PRD, implementation plan, testing plan, write-up
+examples/workspace-sample/  # committed sample output, passes the checker
 ```
 
 ## AI disclosure
