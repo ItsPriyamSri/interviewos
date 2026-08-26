@@ -117,7 +117,7 @@ behavioral round [^E051].
 [^E012]: sre.google — SRE Book, Introduction (Treynor foreword) · https://sre.google/sre-book/introduction/
 [^E013]: sre.google — SRE Book, Introduction · https://sre.google/sre-book/introduction/
 [^E014]: sre.google — SRE Book, Service Level Objectives · https://sre.google/sre-book/service-level-objectives/
-[^E015]: bandittracker.com — Google levels guide · https://bandittracker.com/google-levels (as cited in evidence.jsonl)
+[^E015]: Software Engineering Levels at Google – Bandit Tracker · https://bandittracker.com/software-engineering-levels-at-google/
 [^E016]: inferred — L-number mapping absent from official postings · (no URL)
 [^E017]: Life at Google, "Interviews at Google" (official video) · https://www.youtube.com/watch?v=olScOTFtVW8
 [^E018]: Life at Google, "Interviews at Google" (official video) · https://www.youtube.com/watch?v=olScOTFtVW8
@@ -126,7 +126,7 @@ behavioral round [^E051].
 [^E021]: research.google — "Interviewing for Systems Design Skills" (SRECon) · https://research.google/pubs/interviewing-for-systems-design-skills/
 [^E022]: research.google — "Interviewing for Systems Design Skills" (SRECon) · https://research.google/pubs/interviewing-for-systems-design-skills/
 [^E023]: rework.withgoogle.com — structured interviewing guide · https://rework.withgoogle.com (as cited in evidence.jsonl)
-[^E024]: google.com/about/careers — official prep guidance · (page cited in evidence.jsonl)
+[^E024]: How to: Prepare for a Google Engineering Interview (Life at Google) · https://www.youtube.com/watch?v=ko-KkSmp-Lk
 [^E025]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E026]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E027]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google

@@ -119,8 +119,8 @@ mcp/                        # custom MCP server (ingest_jd, publish_workspace)
 scripts/check_ledger.py     # evidence ledger validator (stdlib Python)
 tests/                      # Python + Node test suites
 fixtures/                   # synthetic golden-path inputs
+docs/                       # PRD, implementation plan, testing plan, write-up
 examples/workspace-sample/  # committed sample output, passes the checker
-docs/writeup.md             # what the agent does and how it uses TrueForge
 ```
 
 ## AI disclosure

@@ -27,8 +27,7 @@ resume:
    verdict requires a retrieved URL; contradictions stay as two rows.
 4. **Drafts four files** in the Daytona sandbox: `evidence.jsonl`, `brief.md`,
    `gaps.md`, `plan.md`. Every factual sentence cites `[^E###]` or is tagged
-   `[INFERRED]`; plan items only come from cited gaps.
-5. **Stops at the gate**: publishing is an MCP tool call that TrueForge pauses
+   `[INFERRED]`; plan items only come from cited gaps.5. **Stops at the gate**: publishing is an MCP tool call that TrueForge pauses
    for Allow/Deny. Deny ends it; Allow runs `scripts/check_ledger.py` over the
    payload — broken citations reject the publish.
 
@@ -66,7 +65,7 @@ cascading broken citations — the gate does real work.
 
 A golden-path session shows: clarifying question → Exa searches with real
 queries (`Google careers Site Reliability Engineer…`) → three subagent threads
-in the same stream → sandbox file writes under `/opt/tf/interviewos/<slug>/` →
+in the same stream → sandbox file drafts under `interviewos/<slug>/` →
 an approval pause showing the exact publish payload → on Allow, four artifacts
 that pass the checker (~50 rows, 200+ inline citations on a Google SRE L4 run).
 

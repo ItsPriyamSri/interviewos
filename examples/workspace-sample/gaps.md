@@ -77,7 +77,7 @@ track/level the recruiter will slot — cheap to resolve on the recruiter call, 
 [^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
 [^E013]: sre.google — SRE Book, Introduction · https://sre.google/sre-book/introduction/
 [^E014]: sre.google — SRE Book, Service Level Objectives · https://sre.google/sre-book/service-level-objectives/
-[^E015]: bandittracker.com — Google levels guide · https://bandittracker.com/google-levels (as cited in evidence.jsonl)
+[^E015]: Software Engineering Levels at Google – Bandit Tracker · https://bandittracker.com/software-engineering-levels-at-google/
 [^E016]: inferred — L-numbers absent from official postings · (no URL)
 [^E021]: research.google — Interviewing for Systems Design Skills · https://research.google/pubs/interviewing-for-systems-design-skills/
 [^E022]: research.google — Interviewing for Systems Design Skills · https://research.google/pubs/interviewing-for-systems-design-skills/
