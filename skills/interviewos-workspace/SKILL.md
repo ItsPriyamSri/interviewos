@@ -53,10 +53,11 @@ Every plan item cites its gap and its evidence ids: `P0: rehearse reliability de
 
 Draft all files in the sandbox under `interviewos/<slug>/`. Before publishing:
 
-1. **Self-check the ledger**: every line of `evidence.jsonl` must parse with
-   `python3 -c "import json,sys; [json.loads(l) for l in open('evidence.jsonl') if l.strip()]"`.
+1. **Self-check the ledger** from the workspace directory (`cd interviewos/<slug>` first):
+   `python3 -c "import json; [json.loads(l) for l in open('evidence.jsonl') if l.strip()]"`.
    A single malformed row breaks every citation pointing at it.
-2. Verify each planned citation id exists in the ledger (`grep -o '\[\^E[0-9]\{3\}\]' *.md`).
+2. **Verify citations resolve** — this set-diff must print nothing:
+   `comm -23 <(grep -ohE '\[\^E[0-9]{3}\]' brief.md gaps.md plan.md | grep -oE 'E[0-9]{3}' | sort -u) <(grep -oE '"id": ?"E[0-9]{3}"' evidence.jsonl | grep -oE 'E[0-9]{3}' | sort -u)`
 
 Then read each file's contents and call:
 

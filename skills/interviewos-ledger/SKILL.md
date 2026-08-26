@@ -48,13 +48,16 @@ When subagents return candidate rows, merge in the sandbox:
 ## Skeptic pass
 
 After merging subagent rows, spawn **one skeptic subagent per top claim**
-(aim for the top 8 by prominence in `brief.md`):
+(up to 8, ranked by how prominent the claim will be in the planned brief):
 
 - The skeptic re-derives each assigned claim from its cited URL alone.
 - A skeptic must never return `supported` without fetching a URL this session.
-- Downgrade outcomes: `supported` → `partial`/`unsupported` when the quote
-  doesn't hold; `official` stays only if the page is genuinely company-owned;
-  unverifiable claims become `inferred` with a `[INFERRED]` tag downstream.
+- Downgrade outcomes: `verdict` becomes `partial`/`unsupported` when the quote
+  doesn't hold; `class: official` stays only if the page is genuinely
+  company-owned. If a claim is unverifiable, make the row fully inferred:
+  `class: inferred`, **empty** `source_url` and `quote`, verdict
+  `partial`/`unsupported`, and tag it `[INFERRED]` in markdown — an inferred
+  row keeps no URL and can never be `supported`.
 - Record the challenge result in `notes` (e.g. "skeptic: quote confirmed verbatim").
 
 ## Citation rules (markdown files)
