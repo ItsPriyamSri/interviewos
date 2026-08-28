@@ -13,8 +13,8 @@ In the sandbox, draft under `interviewos/<slug>/`:
 interviewos/<slug>/
   evidence.jsonl    # source of truth (see interviewos-ledger)
   brief.md          # role + interview loop + tech/DSA, cited
-  gaps.md           # candidate vs ledger (mark N/A without resume)
-  plan.md           # P0/P1/P2 only from cited gaps
+  gaps.md           # candidate vs ledger (N/A without resume)
+  plan.md           # P0/P1/P2 from cited gaps (N/A without resume)
 ```
 
 `<slug>` is filesystem-safe `{company}-{role}`, lowercase with hyphens (e.g. `google-sre`).
@@ -41,7 +41,9 @@ Map resume evidence to ledger rows:
 
 ## plan.md — P0/P1/P2
 
-Only from cited gaps:
+No resume provided? `plan.md` contains exactly: "N/A — no resume provided." Do not invent a candidate or a study list.
+
+Only from cited gaps (when a resume exists):
 
 - **P0** — gap whose requirement row is `official`/`first_party` + `supported`, and clearly missing on the resume. These are must-do before the interview.
 - **P1** — gap backed by `first_party`/`second_party` or verdict `partial`.

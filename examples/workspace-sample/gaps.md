@@ -19,12 +19,13 @@ claims and cross-checked below; no external verification of the resume was perfo
 
 ## Gap register
 
-**[^G1] Algorithms & data structures readiness — severity: HIGH → P0**
-Requirement: algorithms/data structures is an explicit minimum qualification [^E008], the
-phone screen is 1–2 algorithm rounds [^E029] focused on DSA [^E033], and onsite coding is
-weighted above system design with complexity-analysis expectations [^E034] [^E035].
-Resume shows instead: last leetcode-style prep in 2021 (self-assessed "rusty"); production
-Python/Go but no recent algorithm-drilling evidence. Interview format punishes exactly this.
+**[^G1] Algorithms & data structures interview readiness — severity: HIGH → P0**
+Official minimum is algorithms/data structures **or** Unix/Linux internals [^E008], not DSA
+alone (Linux internals are G4). Resume is weak on **both** sides of that OR, so the posting
+minimum is still unmet. Separately, second-party loop sources say the phone screen is 1–2
+algorithm rounds [^E029] focused on DSA [^E033], and onsite coding is weighted above system
+design with complexity-analysis expectations [^E034] [^E035]. Resume shows last leetcode-style
+prep in 2021 (self-assessed "rusty"); production Python/Go but no recent algorithm-drilling.
 
 **[^G2] Formal SLO / error-budget practice — severity: HIGH → P0**
 Requirement: Google centers service health on SLIs/SLOs chosen from user journeys [^E014];
@@ -68,13 +69,13 @@ track/level the recruiter will slot — cheap to resolve on the recruiter call, 
 
 ## Sources
 
-[^E002]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
+[^E002]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
 [^E004]: careers.google.com — Staff SRE posting · https://careers.google.com/jobs/results/82494378043417286-staff-site-reliability-engineer/
-[^E005]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E006]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E007]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
+[^E005]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E006]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E007]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
 [^E013]: sre.google — SRE Book, Introduction · https://sre.google/sre-book/introduction/
 [^E014]: sre.google — SRE Book, Service Level Objectives · https://sre.google/sre-book/service-level-objectives/
 [^E015]: Software Engineering Levels at Google – Bandit Tracker · https://bandittracker.com/software-engineering-levels-at-google/
@@ -86,7 +87,7 @@ track/level the recruiter will slot — cheap to resolve on the recruiter call, 
 [^E033]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E034]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E035]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
-[^E039]: bala-krishnan.com — Systems-SRE onsite report (anecdote) · http://www.bala-krishnan.com/posts/google-sre-onsite/
+[^E039]: bala-krishnan.com — Systems-SRE onsite report (anecdote) · https://www.bala-krishnan.com/posts/google-sre-onsite/
 [^E041]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/
 [^E042]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/
 [^E043]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/
