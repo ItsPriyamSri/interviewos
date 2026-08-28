@@ -11,12 +11,13 @@ Prep horizon: 4 weeks. Candidate resume on file (see `gaps.md`).
 
 Google frames SRE as the combination of software and systems engineering applied to
 large-scale, massively distributed, fault-tolerant systems [^E001], famously described
-internally as "what happens when you ask a software engineer to design an operations team,"
-with SREs hired directly through the standard software-engineer process [^E012]. The day-to-day
-mix skews toward optimizing and hardening existing infrastructure rather than greenfield
-feature work [^E002], and mid-level SRE postings list writing product or system development
-code as an explicit responsibility [^E003], alongside participating in on-call rotation,
-incident response, and driving postmortems [^E004].
+internally as "what happens when you ask a software engineer to design an operations team"
+[^E012]. About 50–60% of SREs are hired through the standard software-engineer process; the
+rest enter via an alternate systems-skills route (UNIX internals and Layer 1–3 networking)
+[^E013]. The day-to-day mix skews toward optimizing and hardening existing infrastructure
+rather than greenfield feature work [^E002], and mid-level SRE postings list writing product
+or system development code as an explicit responsibility [^E003], alongside participating in
+on-call rotation, incident response, and driving postmortems [^E004].
 
 The requirements bar for the mid-level posting ("Software Engineer III", seniority tier
 "Mid") [^E010] is: a Bachelor's degree in CS or a related field, or equivalent practical
@@ -103,16 +104,16 @@ behavioral round [^E051].
 
 ## Sources
 
-[^E001]: careers.google.com — Software Engineer III, Site Reliability Engineering posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E002]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E003]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
+[^E001]: careers.google.com — Software Engineer III, Site Reliability Engineering posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E002]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E003]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
 [^E004]: careers.google.com — Staff SRE posting · https://careers.google.com/jobs/results/82494378043417286-staff-site-reliability-engineer/
-[^E005]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E006]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E007]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E009]: careers.google.com — SWE III SRE posting (preferred qualifications) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
+[^E005]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E006]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E007]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E009]: careers.google.com — SWE III SRE posting (preferred qualifications) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
 [^E011]: careers.google.com — Staff SRE posting · https://careers.google.com/jobs/results/82494378043417286-staff-site-reliability-engineer/
 [^E012]: sre.google — SRE Book, Introduction (Treynor foreword) · https://sre.google/sre-book/introduction/
 [^E013]: sre.google — SRE Book, Introduction · https://sre.google/sre-book/introduction/
@@ -125,7 +126,7 @@ behavioral round [^E051].
 [^E020]: Life at Google, "Interviews at Google" (official video) · https://www.youtube.com/watch?v=olScOTFtVW8
 [^E021]: research.google — "Interviewing for Systems Design Skills" (SRECon) · https://research.google/pubs/interviewing-for-systems-design-skills/
 [^E022]: research.google — "Interviewing for Systems Design Skills" (SRECon) · https://research.google/pubs/interviewing-for-systems-design-skills/
-[^E023]: rework.withgoogle.com — structured interviewing guide · https://rework.withgoogle.com (as cited in evidence.jsonl)
+[^E023]: rework.withgoogle.com — structured interviewing guide · https://rework.withgoogle.com/intl/en/guides/a-guide-to-structured-interviewing-for-better-hiring-practices
 [^E024]: How to: Prepare for a Google Engineering Interview (Life at Google) · https://www.youtube.com/watch?v=ko-KkSmp-Lk
 [^E025]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E026]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
@@ -133,7 +134,7 @@ behavioral round [^E051].
 [^E028]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E029]: techinterviewhandbook.org — interview formats, top companies · https://techinterviewhandbook.org/interview-formats-top-companies/
 [^E030]: tryexponent.com — Google SRE interview guide · https://www.tryexponent.com/guides/google-site-reliability-engineer-interview
-[^E031]: bala-krishnan.com — Google Systems-SRE onsite report · http://www.bala-krishnan.com/posts/google-sre-onsite/
+[^E031]: bala-krishnan.com — Google Systems-SRE onsite report · https://www.bala-krishnan.com/posts/google-sre-onsite/
 [^E032]: inferred — no official round counts/durations found · (no URL)
 [^E033]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
 [^E034]: interviewing.io — Google hiring-process guide · https://interviewing.io/guides/hiring-process/google
@@ -141,7 +142,7 @@ behavioral round [^E051].
 [^E036]: codeintuition.io — what Google looks for in coding interviews · https://codeintuition.io/blogs/what-google-looks-for-coding-interview
 [^E037]: tryexponent.com — Google SRE interview guide · https://www.tryexponent.com/guides/google-site-reliability-engineer-interview
 [^E038]: tryexponent.com — Google SRE interview guide · https://www.tryexponent.com/guides/google-site-reliability-engineer-interview
-[^E039]: bala-krishnan.com — Google Systems-SRE onsite report (anecdote) · http://www.bala-krishnan.com/posts/google-sre-onsite/
+[^E039]: bala-krishnan.com — Google Systems-SRE onsite report (anecdote) · https://www.bala-krishnan.com/posts/google-sre-onsite/
 [^E040]: inferred — official DSA topic pages JS-rendered, unfetchable · (no URL)
 [^E041]: sre.google — SRE Workbook, Non-Abstract Large System Design · https://sre.google/workbook/non-abstract-design/
 [^E042]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/

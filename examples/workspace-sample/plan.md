@@ -1,12 +1,14 @@
 # Plan — Google SRE (~L4), 4-week horizon
 
 Only gaps from `gaps.md` generate work items; every item cites its gap [^G#] and its evidence
-rows [^E###]. Cadence assumes ~10–12 focused hours/week alongside a full-time job; P0s are
-scheduled first because they target official-requirement gaps that are clearly missing today.
+rows [^E###]. Cadence assumes ~10–12 focused hours/week alongside a full-time job. P0.1 is
+interview-format DSA (not "DSA is the official minimum" — that minimum is DSA **or** Linux
+[^E008]; Linux internals stay P1 as G4). P0.2–P0.3 target official-practice gaps clearly
+missing today.
 
 ## P0 — must-do before any interview date (weeks 1–2 core, maintained after)
 
-**P0.1 Daily DSA block (60–90 min/day) [^G1] [^E008] [^E029] [^E033] [^E034] [^E035]**
+**P0.1 Daily DSA block (60–90 min/day) [^G1] [^E029] [^E033] [^E034] [^E035]**
 Rebuild the rusted layer: arrays/strings → hash maps → two pointers → trees/BST → graphs
 (BFS/DFS/topo) → heaps → DP basics. Every problem solved aloud with explicit complexity
 analysis, mirroring how screens score decomposition/clarity/verification/communication [^E036]
@@ -70,9 +72,9 @@ Also confirm onsite round count, since no official source publishes one [INFERRE
 
 ## Sources
 
-[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E009]: careers.google.com — SWE III SRE posting (preferred quals) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
-[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-en
+[^E008]: careers.google.com — SWE III SRE posting · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E009]: careers.google.com — SWE III SRE posting (preferred quals) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
+[^E010]: careers.google.com — SWE III SRE posting (tier label) · https://careers.google.com/jobs/results/126564584885494470-software-engineer-iii-site-reliability-engineering-gcp-identity
 [^E013]: sre.google — SRE Book, Introduction · https://sre.google/sre-book/introduction/
 [^E014]: sre.google — SRE Book, Service Level Objectives · https://sre.google/sre-book/service-level-objectives/
 [^E015]: Software Engineering Levels at Google – Bandit Tracker · https://bandittracker.com/software-engineering-levels-at-google/
@@ -85,7 +87,7 @@ Also confirm onsite round count, since no official source publishes one [INFERRE
 [^E036]: codeintuition.io — Google coding rubric · https://codeintuition.io/blogs/what-google-looks-for-coding-interview
 [^E037]: tryexponent.com — Google SRE interview guide · https://www.tryexponent.com/guides/google-site-reliability-engineer-interview
 [^E038]: tryexponent.com — Google SRE interview guide · https://www.tryexponent.com/guides/google-site-reliability-engineer-interview
-[^E039]: bala-krishnan.com — Systems-SRE onsite report (anecdote) · http://www.bala-krishnan.com/posts/google-sre-onsite/
+[^E039]: bala-krishnan.com — Systems-SRE onsite report (anecdote) · https://www.bala-krishnan.com/posts/google-sre-onsite/
 [^E041]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/
 [^E042]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/
 [^E043]: sre.google — SRE Workbook, NALSD · https://sre.google/workbook/non-abstract-design/

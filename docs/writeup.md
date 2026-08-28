@@ -57,9 +57,10 @@ the ledger plus a stdlib Python checker:
 - `inferred` rows carry no URL and can never be `supported`;
 - ids are unique and `E###`-shaped.
 
-`publish_workspace` runs this checker server-side on the payload before writing
-anything. In live runs it has rejected drafts with a malformed JSONL line and
-cascading broken citations — the gate does real work.
+`publish_workspace` writes the payload to a temp directory, runs this checker
+there, deletes the temp dir, and copies into the published folder only if the
+checker exits 0. In live runs it has rejected drafts with a malformed JSONL
+line and cascading broken citations — the gate does real work.
 
 ## Live-run shape
 
