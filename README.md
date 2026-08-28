@@ -48,7 +48,7 @@ preparation workspace (`evidence.jsonl`, `brief.md`, `gaps.md`, `plan.md`) —
 | Node.js ≥ 22.14 | for TrueForge and this repo's MCP server/tests |
 | Python ≥ 3.12 | stdlib only; runs the ledger checker |
 | [TrueForge](https://trueforge.dev/quickstart) locally | `npx @truefoundry/trueforge@latest`, UI at `http://localhost:8790` |
-| A model API key | configured in TrueForge Settings, never in git |
+| A working model | TrueForge Settings → Models. The agent spec uses `REPLACE_WITH_YOUR_MODEL`; pick a provider/model your key can actually call (a 404 means the configured id is wrong or the key is missing). |
 | Exa connector | ships in the TrueForge MCP catalog; enable it for the agent |
 | [Daytona](https://www.daytona.io/) account/key | sandbox provider; set in TrueForge Settings |
 
@@ -86,8 +86,9 @@ preparation workspace (`evidence.jsonl`, `brief.md`, `gaps.md`, `plan.md`) —
 
 6. **Create the agent**
    - Create an agent from this repo's `agent.json`.
-   - Replace `REPLACE_WITH_YOUR_MODEL` with your model of choice when prompted
-     (or edit `agent.json` before importing).
+   - Replace `REPLACE_WITH_YOUR_MODEL` with a model id that already works in
+     TrueForge chat (Settings → Models). Do not leave a placeholder or an
+     unpublished/internal id — that surfaces as HTTP 404 on the first turn.
    - Confirm the agent has: sandbox enabled (Daytona), dynamic subagents
      enabled, ask-user questions enabled, and approval required for
      `publish_workspace`.
@@ -123,12 +124,20 @@ docs/                       # PRD, implementation plan, testing plan, write-up
 examples/workspace-sample/  # committed sample output, passes the checker
 ```
 
+## Pull requests and Qodo
+
+Product changes land through GitHub pull requests, not direct pushes to
+`main`. Install the [Qodo GitHub App](https://github.com/marketplace/qodo-merge-pro)
+on this repository. Each PR should get a Qodo review (`/agentic_review` if one
+does not appear automatically). Address Action Required findings, or dismiss
+them on the PR with `@qodo` and a reason, before merging.
+
 ## AI disclosure
 
 This project was built with the help of AI coding assistants (OpenCode), as
-disclosed here per hackathon rules. All code was reviewed by a human, and every
-pull request was reviewed by [Qodo](https://www.qodo.ai/) — see the PR history
-in this repository.
+disclosed here per hackathon rules. All code was reviewed by a human, and pull
+requests are reviewed by [Qodo](https://www.qodo.ai/) — see the PR history in
+this repository.
 
 ## License
 
