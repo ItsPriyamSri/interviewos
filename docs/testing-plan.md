@@ -44,6 +44,7 @@ On GitHub:
 - Each feature PR has a Qodo review (`/agentic_review` output or auto review).
 - No open Action Required on merged PRs without a dismissal comment (`@qodo` Rejected / Intentional / Deferred) or a follow-up commit that cleared it.
 - `main` was not used as the working branch for features.
+- README has `## Qodo Code Review Evidence` with a representative merged PR, what Qodo found and what changed, and a PR history that includes a follow-up review.
 
 If Qodo never commented on a merged PR, that PR fails this section — open an empty follow-up only if needed to document the gap; prefer not to rewrite history.
 

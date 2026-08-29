@@ -118,7 +118,7 @@ Judged on demo + running project: show what the agent is doing, waiting on, and 
 ## Submission package (must exist at the end)
 
 - Public GitHub repo judges can clone and run
-- README with setup (TrueForge, model, Exa, Daytona, Qodo already on the repo, import skills, create agent, fixture prompt)
+- README with setup (TrueForge, model, Exa, Daytona, Qodo already on the repo, import skills, create agent, fixture prompt) **and** a `## Qodo Code Review Evidence` section: one representative merged PR with meaningful code, what Qodo surfaced and what changed or was dismissed, plus a PR history that shows the review, the team's decision, and a follow-up review against the final code
 - ~3 minute demo video of the agent **working** (tools, sandbox, approval, workspace) — no secrets, no real personal resume
 - Short write-up: what the agent does and **how it uses TrueForge**
 - Optional: blog post link (separate prize); social posts tagging WeMakeDevs, TrueFoundry, Qodo
