@@ -124,20 +124,43 @@ docs/                       # PRD, implementation plan, testing plan, write-up
 examples/workspace-sample/  # committed sample output, passes the checker
 ```
 
-## Pull requests and Qodo
+## Qodo Code Review Evidence
 
-Product changes land through GitHub pull requests, not direct pushes to
-`main`. Install the [Qodo GitHub App](https://github.com/marketplace/qodo-merge-pro)
-on this repository. Each PR should get a Qodo review (`/agentic_review` if one
-does not appear automatically). Address Action Required findings, or dismiss
-them on the PR with `@qodo` and a reason, before merging.
+Every substantive change goes through a GitHub pull request reviewed by
+[Qodo](https://www.qodo.ai/) before merge. Direct pushes to `main` do not count
+as reviewed work. The [Qodo GitHub App](https://github.com/marketplace/qodo-merge-pro)
+is installed on this repository (see [`.pr_agent.toml`](.pr_agent.toml)). If a
+review does not start on its own, comment `/agentic_review` on the PR.
+
+**Representative PR:**
+[#3 — interviewos MCP ingest and publish tools](https://github.com/ItsPriyamSri/interviewos/pull/3)
+
+Qodo flagged a DNS/IP SSRF gap on `ingest_jd` (hostname-only checks), an
+unbounded MCP request body, and `publish_workspace` leaving stale files on
+republish. We fixed those (resolve and pin public IPs, 1 MiB body cap with
+early close, wipe-then-write snapshot), pushed, and re-ran `/agentic_review`
+against the final commits; Qodo marked the Action Required items resolved.
+
+### PR history
+
+| PR | Change | Review |
+|---|---|---|
+| [#1](https://github.com/ItsPriyamSri/interviewos/pull/1) | bootstrap, `.pr_agent.toml` | Qodo describe + review |
+| [#2](https://github.com/ItsPriyamSri/interviewos/pull/2) | ledger checker | Qodo review, follow-up after fixes |
+| [#3](https://github.com/ItsPriyamSri/interviewos/pull/3) | MCP ingest + publish | Qodo review → High findings fixed → follow-up review on final code |
+| [#4](https://github.com/ItsPriyamSri/interviewos/pull/4) | skills + `agent.json` | Qodo review, follow-up |
+| [#5](https://github.com/ItsPriyamSri/interviewos/pull/5) | README + fixtures | Qodo review, follow-up |
+| [#6](https://github.com/ItsPriyamSri/interviewos/pull/6) | live agent spec | Qodo review, follow-up |
+| [#7](https://github.com/ItsPriyamSri/interviewos/pull/7) | publish hardening | Qodo paused on the installing account; stand-in review posted on the thread |
+| [#8](https://github.com/ItsPriyamSri/interviewos/pull/8) | sample workspace | Qodo paused, then posted after the app was re-linked; citation/claim bugs fixed in #9 |
+| [#9](https://github.com/ItsPriyamSri/interviewos/pull/9) | follow-up on #8 | Qodo review (0 bugs) on the docs commit; High findings from #8 fixed and merged |
 
 ## AI disclosure
 
 This project was built with the help of AI coding assistants (OpenCode), as
-disclosed here per hackathon rules. All code was reviewed by a human, and pull
-requests are reviewed by [Qodo](https://www.qodo.ai/) — see the PR history in
-this repository.
+disclosed here per hackathon rules. All code was reviewed by a human, and
+substantive pull requests are reviewed by [Qodo](https://www.qodo.ai/) — see
+[Qodo Code Review Evidence](#qodo-code-review-evidence).
 
 ## License
 
